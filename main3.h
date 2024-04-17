@@ -18,12 +18,14 @@ char* address = "bc1qcwty7znsn8djc92fdrmftyc7hwlqfc5g9ty7hx";
 char* nonce;
 
 int get(int i){
-    if (i <= 10){
-        return 0;
+    if (i <= 8){
+        return 1;
     }
-    else{
-        return round(i / 3);
+    else if (i <= 70){
+        return i * 2;
     }
+
+    return 100;
 }
 
 char* get_nonce() {
